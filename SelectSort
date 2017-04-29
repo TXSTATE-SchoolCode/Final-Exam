@@ -1,0 +1,64 @@
+namespace SelectSort
+{
+    public partial class Form1 : Form
+    {
+        public Form1()
+        {
+            InitializeComponent();
+        }
+
+        int[] myNumbers = { 5, 4, 7, 3, 1, 2 };
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            foreach (int var in myNumbers)
+            {
+                listBox1.Items.Add(var);                
+            }
+        }
+
+        private void btnExit_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+
+        private void SortArray(int[] myNumbers)
+        {
+            int maxIndex;
+            int maxValue;
+
+            for (int start = 0; start <( myNumbers.Length - 1); start++)
+            {
+                maxIndex = start;
+                maxValue = myNumbers[start];
+
+                for (int index = start + 1; index < myNumbers.Length; index++)
+                {
+                    if (myNumbers[index] > myNumbers[start])
+                    {
+                        maxIndex = index;
+                        maxValue = myNumbers[index];
+                    }
+                }
+                Swap(ref myNumbers[maxIndex], ref myNumbers[start]);
+            }
+        }
+        private void Swap(ref int num1, ref int num2)
+        {
+            int temp = num1;
+            num1 = num2;
+            num2 = temp;
+        }
+
+
+        private void btnGo_Click(object sender, EventArgs e)
+        {
+            SortArray(myNumbers);
+            listBox2.Items.Clear();
+            foreach (int var in myNumbers)
+            {
+                listBox2.Items.Add(var);
+            }
+        }
+    }
+}
