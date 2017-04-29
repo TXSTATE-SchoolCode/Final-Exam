@@ -1,0 +1,81 @@
+public partial class Form1 : Form
+    {
+        public Form1()
+        {
+            InitializeComponent();
+        }       
+                  
+        private void btnSelect_Click(object sender, EventArgs e)
+        {
+            CreateButtons();
+
+            this.employeeTableAdapter.Fill(this.project3DataSet.Employee);            
+        }
+
+        private void btnInsert_Click(object sender, EventArgs e)
+        {
+            this.employeeTableAdapter.InsertQueryEmployee(txtName.Text, txtPhoneNumber.Text, txtRoomNumber.Text,
+                Convert.ToInt32(txtPayMonths.Text), Convert.ToInt32(txtPaymentMonth.Text));
+
+            this.employeeTableAdapter.Fill(this.project3DataSet.Employee);
+        }
+
+        private void btnUpdate_Click(object sender, EventArgs e)
+        {
+            this.employeeTableAdapter.UpdateQueryEmployee(txtName.Text, txtPhoneNumber.Text, txtRoomNumber.Text,
+                Convert.ToInt32(txtPayMonths.Text), Convert.ToInt32(txtPaymentMonth.Text),Convert.ToInt32(txtEmployeeID.Text));
+
+            this.employeeTableAdapter.Fill(this.project3DataSet.Employee);            
+        }
+
+        private void btnDelete_Click(object sender, EventArgs e)
+        {
+            this.employeeTableAdapter.DeleteQueryEmployee(Convert.ToInt32(txtEmployeeID.Text));
+
+            this.employeeTableAdapter.Fill(this.project3DataSet.Employee);
+        }
+
+//This selects the whole row not just one cell to avoid error if the row header is clicked
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            this.dataGridView1.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+        }
+        
+        private void dataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            Employee myEmp = new Employee();
+
+            double amount = myEmp.Calculate(Convert.ToDouble(txtPayMonths.Text), Convert.ToDouble(txtPaymentMonth.Text));
+
+            MessageBox.Show(amount.ToString("c"));
+        }
+
+        private void btnClose_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+
+        private void CreateButtons()
+        {
+            int counter = 1;
+            if (counter == 1)
+            {
+                Button btnInsert = new Button();
+                btnInsert.Click += new System.EventHandler(btnInsert_Click);
+                btnInsert.Text = "Insert";
+                flowLayoutPanel1.Controls.Add(btnInsert);
+
+                Button btnUpdate = new Button();
+                btnUpdate.Click += new System.EventHandler(btnUpdate_Click);
+                btnUpdate.Text = "Update";
+                flowLayoutPanel1.Controls.Add(btnUpdate);
+
+                Button btnDelete = new Button();
+                btnDelete.Click += new System.EventHandler(btnDelete_Click);
+                btnDelete.Text = "Delete";
+                flowLayoutPanel1.Controls.Add(btnDelete);
+
+                counter++;
+            }
+        }
+    }
