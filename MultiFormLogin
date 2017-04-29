@@ -1,0 +1,190 @@
+//User class to store the user information
+    class Users
+    {
+        private string _userName;
+        private string _password;
+        private string _firstName;
+        private string _lastName;
+        private string _email;
+
+        public string Email
+        {
+            get { return _email; }
+            set { _email = value; }
+        }
+
+
+        public string LastName
+        {
+            get { return _lastName; }
+            set { _lastName = value; }
+        }
+
+
+        public string FirstName
+        {
+            get { return _firstName; }
+            set { _firstName = value; }
+        }
+        
+
+        public string Password
+        {
+            get { return _password; }
+            set { _password = value; }
+        }
+        
+
+        public string UserName
+        {
+            get { return _userName; }
+            set { _userName = value; }
+        }
+
+        public Users()
+        {
+            _userName = "";
+            _password = "";
+            _firstName = "";
+            _lastName = "";
+            _email = "";
+        }
+        public Users(string userName, string password, string firstName, string lastName, string email)
+        {
+            _userName = userName;
+            _password = password;
+            _firstName = firstName;
+            _lastName = lastName;
+            _email = email;
+        }
+    }
+    
+    
+    //Takes information from textboxes and writes them to a tab delimited txt file
+    public partial class Form2 : Form
+    {
+        public Form2()
+        {
+            InitializeComponent();
+        }
+
+        private void btnSaveAccount_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                StreamWriter outputFile;
+
+                outputFile = File.AppendText("Data.txt");
+
+                string str = txtUserName.Text + '\t' + txtPassword.Text + '\t' + txtFirstName.Text + '\t' +
+                    txtLastName.Text + '\t' + txtEmail.Text;
+
+                outputFile.WriteLine(str);
+
+                txtEmail.Text = "";
+                txtFirstName.Text = "";
+                txtLastName.Text = "";
+                txtPassword.Text = "";
+                txtEmail.Text = "";
+
+                MessageBox.Show("Account Saved");
+
+                outputFile.Close();
+
+                this.Close();
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+    }
+    
+    
+    
+    //user enters userName and Pasword to match against txt file
+    public partial class Form3 : Form
+    {
+        public Form3()
+        {
+            InitializeComponent();
+        }
+
+        //unused
+        //List<Users> lstUsers = new List<Users>();
+
+        private void btnLogin_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                StreamReader inputFile;
+
+                inputFile = File.OpenText("Data.txt");
+
+                bool userNameAndPasswordMatch = false;
+                
+                    while (!inputFile.EndOfStream)
+                    {
+                        Users myUser = new Users();
+
+                        string line = inputFile.ReadLine();
+
+                        string[] str = line.Split('\t');
+
+                        myUser.UserName = str[0];
+                        myUser.Password = str[1];
+                        myUser.FirstName = str[2];
+                        myUser.LastName = str[3];
+                        myUser.Email = str[4];
+
+                        if (txtUserName2.Text == myUser.UserName && txtPassword2.Text == myUser.Password)
+                        {
+                            Form4 myForm4 = new Form4();
+                            myForm4.ShowDialog();
+                            userNameAndPasswordMatch = true;
+                        }
+                    }
+
+                    if (userNameAndPasswordMatch == false)
+                    {
+                        MessageBox.Show("Please try again"); 
+                    }                               
+            }
+
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+    }
+    
+    
+    
+    
+    //Creates a listbox at runtime, reads the txt file and adds each line to the listbox
+     public partial class Form4 : Form
+    {
+        public Form4()
+        {
+            InitializeComponent();
+        }
+
+        private void Form4_Load(object sender, EventArgs e)
+        {
+            ListBox myListBox = new ListBox();
+            myListBox.HorizontalScrollbar = true;
+            myListBox.Size = new Size(300, 300);
+            flowLayoutPanel1.Controls.Add(myListBox);
+
+            StreamReader inputFile;
+
+                inputFile = File.OpenText("Data.txt");
+
+                while (!inputFile.EndOfStream)
+                {
+                    string line = inputFile.ReadLine();
+
+                    myListBox.Items.Add(line);                    
+                }
+        }
+    }
