@@ -1,0 +1,111 @@
+//Person class created to hold name, email and phone number of person
+class PersonEntry
+    {
+        private string _name;
+        private string _email;
+        private string _phoneNumber;
+
+        public string PhoneNumber
+        {
+            get { return _phoneNumber; }
+            set { _phoneNumber = value; }
+        }
+
+
+        public string Email
+        {
+            get { return _email; }
+            set { _email = value; }
+        }
+
+
+        public string Name
+        {
+            get { return _name; }
+            set { _name = value; }
+        }
+
+        public PersonEntry()
+        {
+            _name = "";
+            _phoneNumber = "";
+            _email = "";
+        }
+    }
+
+
+
+
+
+
+namespace EmailAddressBook
+{
+    public partial class MainForm : Form
+    {
+        public MainForm()
+        {
+            InitializeComponent();
+        }
+
+        
+        //New list to hold Person obeject created in Person entry class
+        List<PersonEntry> lstEntry = new List<PersonEntry>();
+
+        
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            try
+            {
+                //Stream reader object to read data from txt file
+                StreamReader inputFile;
+                inputFile = File.OpenText("Data.txt");
+
+                //Read all lines while not at the end of the txt file
+                while (!inputFile.EndOfStream)
+                {
+                    //Create a new Person called myPerson
+                    PersonEntry myPerson = new PersonEntry();
+                    //Create a string that stores a line from the txt file
+                    string line = inputFile.ReadLine();
+                    //Create an array from the "line" string splitting using the tab ('\t') marker
+                    string[] str = line.Split('\t');
+                    //Add the atributes to the person object from the split array
+                    myPerson.Name = str[0];
+                    myPerson.Email = str[1];
+                    myPerson.PhoneNumber = str[2];
+                    //After adding the atributes to the person object, add it to the list
+                    lstEntry.Add(myPerson);
+                    //Add the name of the person to the listbox
+                    listBox1.Items.Add(myPerson.Name);
+                }
+
+                inputFile.Close(); 
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+        //On the selected index event of the listbox
+        private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            //create a new form object (the form was previously added to the project)
+            Form2 myForm = new Form2();
+            //save the index of the selected item to this variable
+            int i = listBox1.SelectedIndex;
+            //Add the atributes of the person object to the labels on the second form
+            myForm.lblName.Text = lstEntry[i].Name;
+            myForm.lblEmail.Text = lstEntry[i].Email;
+            myForm.lblPhone.Text = lstEntry[i].PhoneNumber;            
+            //Show the second form with the information created
+            myForm.ShowDialog();
+            
+        }
+
+        private void btnClose_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+    }
+}
