@@ -1,0 +1,119 @@
+Add--new item--Service database--right click tables--add new table--create
+	name table--- click update---
+Solution explorer---right click---Add new item--- LINQ to SQL Classes
+	server explorer---drag table to middle screen
+
+
+public partial class Form1 : Form
+    {
+    //SampleDataClass is the name given to the LINQ to SQL Classes
+    //with DataContext at the end.
+        SampleDataClassDataContext myDb = new SampleDataClassDataContext();
+
+        public Form1()
+        {
+            InitializeComponent();
+        }        
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+        //Button created at runtime form load
+            Button btnSelect = new Button();
+            btnSelect.Text = "Select";
+            btnSelect.Click += new EventHandler(btnSelect_Click);
+            flowLayoutPanel1.Controls.Add(btnSelect);
+
+        }
+
+        private void btnSelect_Click(object sender, EventArgs e)
+        {
+        //This is the LINQ command to select
+        //aEmployees is the name of a variable
+            var query = from aEmployees in myDb.Employees
+                        select aEmployees;
+
+            dataGridView1.DataSource = query;
+
+            Button btnInsert = new Button();
+            btnInsert.Text = "Insert";
+            btnInsert.Click += new EventHandler(btnInsert_Click);
+            flowLayoutPanel1.Controls.Add(btnInsert);
+
+            Button btnUpdate = new Button();
+            btnUpdate.Text = "Update";
+            btnUpdate.Click += new EventHandler(btnUpdate_Click);
+            flowLayoutPanel1.Controls.Add(btnUpdate);
+
+            Button btnDelete = new Button();
+            btnDelete.Text = "Delete";
+            btnDelete.Click += new EventHandler(btnDelete_Click);
+            flowLayoutPanel1.Controls.Add(btnDelete);
+        }       
+
+        private void btnInsert_Click(object sender, EventArgs e)
+        {
+            Employee myE = new Employee();
+            myE.EmployeeId = Convert.ToInt32(textBox1.Text);
+            myE.firstName = textBox2.Text;
+            myE.lastName = textBox3.Text;
+
+            myDb.Employees.InsertOnSubmit(myE);
+            myDb.SubmitChanges();
+
+            //This updates the datagridview
+            var query = from aEmployees in myDb.Employees
+                        select aEmployees;
+
+            dataGridView1.DataSource = query;
+        }
+
+        private void btnUpdate_Click(object sender, EventArgs e)
+        {
+            Employee myE = new Employee();
+            myE.EmployeeId = Convert.ToInt32(textBox1.Text);
+            myE.firstName = textBox2.Text;
+            myE.lastName = textBox3.Text;
+
+            var q = from aEmployees in myDb.Employees
+                    where aEmployees.EmployeeId == Convert.ToInt32(textBox1.Text)
+                    select aEmployees;
+
+            foreach (Employee item in q)
+            {
+                item.firstName = textBox2.Text;
+                item.lastName = textBox3.Text;
+            }
+
+            myDb.SubmitChanges();
+        }
+
+        private void btnDelete_Click(object sender, EventArgs e)
+        {
+            Employee myE = new Employee();
+            myE.EmployeeId = Convert.ToInt32(textBox1.Text);
+            myE.firstName = textBox2.Text;
+            myE.lastName = textBox3.Text;
+
+            var q = from aEmployee in myDb.Employees
+                    where aEmployee.EmployeeId == Convert.ToInt32(textBox1.Text)
+                    select aEmployee;
+
+            foreach (var item in q)
+            {
+                myDb.Employees.DeleteOnSubmit(item);
+            }
+
+            myDb.SubmitChanges();
+
+            //This updates the datagridview
+            var query = from aEmployee in myDb.Employees
+                        select aEmployee;
+
+            dataGridView1.DataSource = query;
+        }
+
+        private void btnClose_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+    }
