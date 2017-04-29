@@ -1,0 +1,181 @@
+Main Class
+class Animal
+    {
+        private string _species;
+
+        public string Species
+        {
+            get { return _species; }
+            set { _species = value; }
+        }
+        public Animal(string anySpecies)
+        {
+            _species = anySpecies;
+        }
+        public virtual void MakeSound()
+        {
+            MessageBox.Show("Grrrrrrr", "caption");
+        }
+
+        public static void BlahBlah(Animal myAn)
+        {
+            myAn.MakeSound();
+        }
+    }
+    
+    
+    //Secondary class derived from Animal
+    class Cat : Animal
+    {
+        private string _name;
+
+        public string Name
+        {
+            get { return _name; }
+            set { _name = value; }
+        }
+
+        public Cat(string anyName) : base("Cat")
+        {
+            _name = anyName;
+        }
+        public override void MakeSound()
+        {
+            MessageBox.Show("Meow");
+        }
+    }
+    
+    
+    
+    //Another derived class
+    class Dog : Animal
+    {
+        private string _name;
+
+        public string Name
+        {
+            get { return _name; }
+            set { _name = value; }
+        }
+        
+        public Dog(string anyName) : base("Dog")
+        {
+            _name = anyName;
+        }
+
+        public override void MakeSound()
+        {
+            MessageBox.Show("Woof! Woof!");
+        }
+    }
+    
+    
+    //
+    abstract class Student
+    {
+        private string _firstName;
+        private string _lastName;
+
+        public string LastName
+        {
+            get { return _lastName; }
+            set { _lastName = value; }
+        }
+
+
+        public string FirstName
+        {
+            get { return _firstName; }
+            set { _firstName = value; }
+        }
+
+        public Student(string pfirstName, string plastName)
+        {
+            _firstName = pfirstName;
+            _lastName = plastName;
+        }
+
+        public abstract double RequiredHours
+        {
+            get;
+        }
+    }
+    
+    
+    //
+    class CompSciStudent : Student
+    {
+        private double MATH_HOURS = 20;
+        private double CS_HOURS = 40;
+        private double GEN_HOURS = 60;
+
+        private string _academicTrack;
+
+        public string AcademicTrack
+        {
+            get { return _academicTrack; }
+            set { _academicTrack = value; }
+        }
+
+        public CompSciStudent(string _firstName, string _lastName, string _academicTrack) 
+            : base (_firstName, _lastName)
+        {
+            _academicTrack = AcademicTrack;
+        }
+
+        public override double RequiredHours
+        {
+            get { return MATH_HOURS + CS_HOURS + GEN_HOURS; }
+        }
+    }
+    
+    
+    
+    //
+    public partial class Form1 : Form
+    {
+        Dog myDog = new Dog("Fido");
+        Cat myCat = new Cat("Kitty");
+        public Form1()
+        {
+            InitializeComponent();
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            //Animal myAnimal = new Animal("regular animal");
+            //MessageBox.Show("The species is " + myAnimal.Species);
+            //myAnimal.MakeSound();
+
+            //MessageBox.Show("The species is " + myDog.Species);
+            //MessageBox.Show("The animal's name is " + myDog.Name);
+            //myDog.MakeSound();
+
+            //MessageBox.Show("The species is " + myCat.Species);
+            //MessageBox.Show("The animal's name is " + myCat.Name);
+            //myCat.MakeSound();
+
+            //List<Animal> myAnimalList = new List<Animal>();
+
+            //myAnimalList.Add(myDog);
+            //myAnimalList.Add(myCat);
+
+            //foreach (Animal item in myAnimalList)
+            //{
+            //    MessageBox.Show(item.Species);
+            //    item.MakeSound();
+            //}
+
+            //ABSTRACT CLASSES
+            CompSciStudent myStud = new CompSciStudent("John", "Smith", "WebDesign");
+            double hours = myStud.RequiredHours;
+
+            MessageBox.Show(hours.ToString());
+
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            //Animal.BlahBlah(myDog);
+        }
+    }
