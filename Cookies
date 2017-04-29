@@ -1,0 +1,84 @@
+//This needed inside the Web.Config file to use validation
+<appSettings>
+    <add key="ValidationSettings:UnobtrusiveValidationMode" value="None"/>
+    
+  </appSettings>
+
+//User Class
+public class User
+{
+		private string _firstName;
+        private string _lastName;
+
+	    public string LastName
+	    {
+		    get { return _lastName;}
+		    set { _lastName = value;}
+	    }
+
+
+	    public string FirstName
+	    {
+		    get { return _firstName;}
+		    set { _firstName = value;}
+	    }
+        public User (string firstName, string lastName)
+	    {
+            _firstName = firstName;
+            _lastName = lastName;
+	    }
+
+        public User()
+        {
+            _firstName = "";
+            _lastName = "";
+        }
+}
+
+
+//Adds the information to the User class info
+public partial class _Default : System.Web.UI.Page
+{
+    HttpCookie myCookie;
+    User myUser = new User();
+
+    protected void Page_Load(object sender, EventArgs e)
+    {
+
+    }
+    protected void Button1_Click(object sender, EventArgs e)
+    {
+        myUser.FirstName = TextBox1.Text;
+        myUser.LastName = TextBox2.Text;
+
+        string myUserSer = new JavaScriptSerializer().Serialize(myUser);
+        myCookie = new HttpCookie("myCookieUser",myUserSer);
+        Response.Cookies.Add(myCookie);
+
+        Session["currentUser"] = new User(TextBox1.Text, TextBox2.Text);
+
+        Response.Redirect("Default2.aspx");
+    }
+}
+
+
+
+//
+public partial class Default2 : System.Web.UI.Page
+{
+    protected void Page_Load(object sender, EventArgs e)
+    {
+        User anyUser = new User();
+        anyUser = (User) Session["currentUser"];
+
+        lbl1.Text = anyUser.FirstName;
+        lbl2.Text = anyUser.LastName;
+
+    }
+    protected void Button1_Click(object sender, EventArgs e)
+    {
+        Response.Redirect("Default.aspx");
+
+        
+    }
+}
