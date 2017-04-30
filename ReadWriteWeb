@@ -1,0 +1,53 @@
+//right click project---add folder
+
+using System.IO;
+
+public partial class _Default : System.Web.UI.Page
+{
+    StreamWriter mySw;
+
+    protected void Page_Load(object sender, EventArgs e)
+    {
+
+    }
+    protected void Button1_Click(object sender, EventArgs e)
+    {
+        mySw = File.AppendText(Server.MapPath("~/Files/Data.txt"));
+
+        mySw.WriteLine(TextBox1.Text + '\t' + TextBox2.Text);
+
+        mySw.Close();
+
+//Redirects to the second page where the file will be read
+        Response.Redirect("Default2.aspx");
+    }
+}
+
+
+
+//
+using System.IO;
+
+public partial class Default2 : System.Web.UI.Page
+{
+    StreamReader inputFile;
+
+    protected void Page_Load(object sender, EventArgs e)
+    {
+
+    }
+    protected void Button1_Click(object sender, EventArgs e)
+    {
+        inputFile = File.OpenText(Server.MapPath("~/Files/Data.txt"));
+
+        while (!inputFile.EndOfStream)
+        {
+            string line = inputFile.ReadLine();
+
+            //string[] splitStr = line.Split('\t');
+
+            ListBox1.Items.Add(line);
+        }
+        inputFile.Close();
+    }
+}
