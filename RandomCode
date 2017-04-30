@@ -1,0 +1,288 @@
+List of C# code school
+
+MessageBox.Show("Message here");
+labelName.Text = "Text here";
+controlName.Visible = true;
+this.Close();
+labelName.Text = TextBoxName.Text;
+wholeNumber = (int)moneyNumber;
+variableName = int.Parse(TextBoxName.Text);
+VariableNAme.ToString("c");
+try{statement;} catch(Exception ex){MessageBox.Show(ex.Message);}
+controlName.Focus();
+labelName.BackColor = Color.Black;
+lableName.ForeColor = Color.Yellow;
+this.BackColor = Color.Blue <===for form
+if(expression) {statement;} else {statement;}
+if (String.Compare(string1, string2)<0)
+	>0 if string1 is >string2
+	=0 if string1 = string2
+	<0 if string1 < string2
+if (decimal.TryParse(txtBoxNAme.Text, out targetVariable)){ ;}
+	else { ;}
+if (RadioButtonName.Checked) { ;} else { ;}
+if (checkBoxName.Checked) { ;} else { ;}
+variableName = listBoxName.SelectedItem.ToString();
+if (listBoxName.SelectedIndex != -1)<=== nothing selected = -1
+switch (variable)
+	case "variable1":
+		statement;
+		break;
+	case "variable2":
+		statement;
+		break;
+listBoxName.Items.Add(Item)
+listBoxName.Items.Count
+listBoxName.Items.Clear()
+while (boolean) {statement;}
+for (initializationEpression; testExpression; UpdateExpresson)
+	{statement;}
+do {statement;} while (boolean);
+
+
+Button myButton = new Button();
+myButton.Text = "Click";
+flowLayoutPanel.Controls.Add(myButton)
+myButton.Click += new EventHandler(myButton_Click);
+private void myButton_Click(Object sender, EventArgs e){statements;}
+
+list<string> myList = new List<string>;
+string[] myArray = new Array[5];<=== 5=# of elements in array
+
+Form form2 = new Form();
+form2.ShowDialog(); <=========modal has to be closed to continue
+
+class Truck : Automobile <======= truck inherits from automobile (use : )
+{
+private String _drive;
+
+public Truck()
+{
+	_drive = "";
+}
+
+public string Drive
+{
+	get { return _drive;}
+	set { _drive = value;}
+}
+}
+
+ struct Automobile
+ {
+     public string make;
+     public int year;
+     public double mileage;
+ }  
+
+
+enum Day { Sunday, Monday, Tuesday, Wednesday, Thursday, Friday, Saturday }  
+enum Water { Freezing = 32, Boiling = 212 
+
+myPictureBox.Image = myImageList.Images[5]; 
+numberImages = myImageList.Images.Count;  
+int index = rand.Next(cardImageList.Images.Count);  
+cardPictureBox.Image = cardImageList.Images[index]; 
+
+
+char.IsDigit(ch)
+char.IsDigit(str, index)
+char.IsLetter(ch)   
+char.IsLetter(str,index)
+char.IsLetterOrDigit(ch)
+char.IsLetterOrDigit(str, index)
+char.IsLower(ch)   
+char.IsLower(str, index)
+char.IsPunctuation(ch)
+char.IsPunctuation(str, index) 
+char.IsUpper(ch)
+char.IsUpper(str, index)
+char.IsWhiteSpace(ch)    
+char.IsWhiteSpace(str, index)
+char.ToLower(ch)   
+char.ToUpper(ch)   
+stringVar.Contains(substring)<==== if (stringVar.Contains("ice"))
+stringVar.Contains(ch)
+stringVar.StartsWith(substring)  
+stringVar.EndsWith(substring)
+
+stringVar.IndexOf(substring)
+string str = "chocolate ice cream";
+int position = str.IndexOf("ice");<===Displays 10
+
+stringVar.IndexOf(substring, start)
+
+stringVar.IndexOf(substring, start, count)searches stringVar for substring
+starting at start and goes on forward for count # of chars
+stringVar.IndexOf(ch)
+stringVar.IndexOf(ch, start)
+stringVar.IndexOf(ch, start,count)
+stringVar.LastIndexOf(substring)
+stringVar.LastIndexOf(substring,start)
+
+stringVar.LastIndexOf(substring, start, count) same as IndexOf but moves backwards
+
+stringVar.LastIndexOf(ch)<===finds the beginning of the last occurrence of char
+stringVar.LastIndexOf(ch, start)
+stringVar.LastIndexOf(ch, start,count)
+stringVar.Substring(start)
+stringVar.Substring(start,count)
+stringVar.Insert(start, strItem)
+stringVar.Remove(start)
+stringVar.Remove(start, count)
+stringVar.ToLower()
+stringVar.ToUpper()
+stringVar.Trim()
+stringVar.TrimStart()
+stringVar.TrimEnd() 
+
+
+namespace EmailAddressBook
+{
+    public partial class MainForm : Form
+    {
+        public MainForm()
+        {
+            InitializeComponent();
+        }
+
+        
+        
+        List<PersonEntry> lstEntry = new List<PersonEntry>();
+
+        
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            try
+            {
+                StreamReader inputFile;
+                inputFile = File.OpenText("Data.txt");
+
+                while (!inputFile.EndOfStream)
+                {
+                    PersonEntry myPerson = new PersonEntry();
+
+                    string line = inputFile.ReadLine();
+
+                    string[] str = line.Split('\t');
+
+                    myPerson.Name = str[0];
+                    myPerson.Email = str[1];
+                    myPerson.PhoneNumber = str[2];
+
+                    lstEntry.Add(myPerson);
+
+                    listBox1.Items.Add(myPerson.Name);
+                }
+
+                inputFile.Close(); 
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            Form2 myForm = new Form2();
+
+            int i = listBox1.SelectedIndex;
+
+            myForm.lblName.Text = lstEntry[i].Name;
+            myForm.lblEmail.Text = lstEntry[i].Email;
+            myForm.lblPhone.Text = lstEntry[i].PhoneNumber;            
+
+            myForm.ShowDialog();
+            
+        }
+
+        private void btnClose_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+    }
+}
+
+
+namespace EmailAddressBook
+{
+    class PersonEntry
+    {
+        private string _name;
+        private string _email;
+        private string _phoneNumber;
+
+        public string PhoneNumber
+        {
+            get { return _phoneNumber; }
+            set { _phoneNumber = value; }
+        }
+
+
+        public string Email
+        {
+            get { return _email; }
+            set { _email = value; }
+        }
+
+
+        public string Name
+        {
+            get { return _name; }
+            set { _name = value; }
+        }
+
+        public PersonEntry()
+        {
+            _name = "";
+            _phoneNumber = "";
+            _email = "";
+        }
+	
+	public PersonEntry(string _name, string _phoneNumber, string _email)
+        {
+            _name = Name;
+            _phoneNumber = PhoneNumber;
+            _email = Email;
+        }
+    }
+}
+
+
+ class Box : Rectangle <========Box inherits from Rectangle (use : )
+ {
+     // Field 
+     private int _height;             Calling Base class constructor
+     // Constructo                 using length and width from rectangle    
+     public Box()                          must use word base
+     {                                             ||
+         _height = 0;                              ||
+     }                                             ||
+     // Constructor                                \/
+     public Box(int length, int width, int height) : base(length, width)
+     {
+         _height = height;
+     }
+     // Height property
+     public int Height
+     {
+         get { return _height; }
+         set { _height = value; }
+     }
+ }  
+
+
+// MakeSound method on base clase
+     public virtual void MakeSound() <====virtual allows subclass methods to override
+     {
+         MessageBox.Show("Grrrrrrr");
+     }
+
+
+// MakeSound method on subclass
+     public override void MakeSound()<=====use override to use instead on base
+     {
+         MessageBox.Show("Woof! Woof!");
+     }
