@@ -1,0 +1,41 @@
+Sub ExportToTxt()
+Dim myFolder As String
+
+ActiveSheet.Activate
+'If there's an error go to on error
+On Error Resume Next
+'Ask user to select range for text file.
+Set myRange = Application.InputBox(prompt:="Please select a range!", _
+Title:="Text File Range!", Type:=8)
+'If there's an error from selection of range then it will exit sub
+ErrorCode = Err.Number
+On Error GoTo 0
+If ErrorCode <> 0 Then
+    Exit Sub
+End If
+'If there was no error the screen won't update
+Application.ScreenUpdating = False
+myRange.Select
+Selection.Copy
+'This temporarily adds a sheet named "Temp." the user doesn't see this
+Sheets.add.Name = "Temp"
+Sheets("Temp").Select
+ActiveSheet.Paste
+'Ask user for folder to save text file to.
+myFolder = Application.GetSaveAsFilename(fileFilter:="Text Files (*.txt), *.txt")
+'Save selected data as text file in users selected folder.
+ActiveWorkbook.SaveAs Filename:=myFolder, FileFormat:=xlText, CreateBackup:=False
+'No confirmation to save
+Application.DisplayAlerts = False
+'Remove temporary sheet.
+ActiveWindow.SelectedSheets.Delete
+'Restore alerts and screen update
+Application.DisplayAlerts = True
+Application.ScreenUpdating = True
+'gets the file name only from full path (includes file type .txt)
+FileNameFromPath = Right(myFolder, Len(myFolder) - InStrRev(myFolder, "\"))
+'Indicate save action.
+MsgBox "Text File: " & UCase(FileNameFromPath) & " was Saved!"
+'Go to top of sheet.
+Range("A1").Select
+End Sub
