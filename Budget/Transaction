@@ -19,6 +19,7 @@ namespace Budget
             InitializeComponent();
         }
 
+        transaction myTransaction = new transaction();
 
         private void frmTransaction_Load(object sender, EventArgs e)
         {
@@ -28,35 +29,26 @@ namespace Budget
 
         private void btnSave_Click(object sender, EventArgs e)
         {
-            string insertQuery = "INSERT INTO tblMainData VALUES (@TransactionDate, @Merchant, @Amount, (SELECT SubcategoryId FROM tblSubcategory WHERE SubcategoryName = @SubcategoryName), @Notes)";
-            SqlConnection connection = clsTransactionFrm.GetConnection();
+            myTransaction._date = DateTime.Parse(mskTxtDate.Text);
+            myTransaction._merchant = txtMerchant.Text;
+            myTransaction._amount = decimal.Parse(txtAmount.Text);
+            myTransaction._SubcategoryName = cboSubcategory.Text;
+            myTransaction._notes = txtNotes.Text;
 
-            using (SqlCommand command = new SqlCommand(insertQuery, connection))
+            Test(myTransaction);
+
+            if (NumberOfRows > 1)
             {
-                connection.Open();
+                MessageBox.Show("Transaction Saved");
 
-                command.Parameters.AddWithValue("@TransactionDate", mskTxtDate.Text);
-                command.Parameters.AddWithValue("@Merchant", txtMerchant.Text);
-                command.Parameters.AddWithValue("@Amount", Decimal.Parse(txtAmount.Text));
-                command.Parameters.AddWithValue("@SubcategoryName", cboSubcategory.Text);
-                command.Parameters.AddWithValue("@Notes", txtNotes.Text);
+                mskTxtDate.Text = "";
+                txtAmount.Text = "";
+                txtMerchant.Text = "";
+                cboSubcategory.SelectedIndex = -1;
 
-                if (command.ExecuteNonQuery() == 1)
-                {
-                    MessageBox.Show("Transaction Saved");
-
-                    mskTxtDate.Text = "";
-                    txtAmount.Text = "";
-                    txtMerchant.Text = "";
-                    cboSubcategory.SelectedIndex = -1;
-                }
-                else
-                {
-                    MessageBox.Show("Something weird happened TRY AGAIN");
-                }
+                PopulateCboSubcategory();
+                PopulateListView();
             }
-            PopulateCboSubcategory();
-            PopulateListView();
         }
 
         private void btnNewCategory_Click(object sender, EventArgs e)
@@ -71,6 +63,19 @@ namespace Budget
             PopulateCboSubcategory();
         }
 
+        private void btnCancel_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+
+        private void btnImport_Click(object sender, EventArgs e)
+        {
+            numberOfRows = Read();
+            MessageBox.Show(numberOfRows + " Transactions Saved");
+            PopulateCboSubcategory();
+            PopulateListView();
+        }
+        /*Everything under this line can be moved to a class*/
         private void PopulateCboSubcategory()
         {
             try
@@ -115,7 +120,7 @@ namespace Budget
 
             //Query to select
             using (SqlDataAdapter adapter = new SqlDataAdapter("SELECT * FROM tblMainData", clsTransactionFrm.GetConnection()))
-            {                
+            {
                 DataTable lstViewTable = new DataTable();
                 adapter.Fill(lstViewTable);
 
@@ -130,69 +135,72 @@ namespace Budget
                     //listItem.SubItems.Add(dr["SubcategoryName"].ToString());
                     listItem.SubItems.Add(dr["Notes"].ToString());
                     listView1.Items.Add(listItem);
-                } 
+                }
             }
         }
 
-        private void btnCancel_Click(object sender, EventArgs e)
+        private int Test(Transaction myTrans)
         {
-            this.Close();
-        }
-        
-        transaction myTransaction = new transaction();
-        List<transaction> myTransactionsList = new List<transaction>();
-        int transactionNumber =0;
+            string insertQuery = "INSERT INTO tblMainData VALUES (@TransactionDate, @Merchant, @Amount," +
+            "(SELECT SubcategoryId FROM tblSubcategory WHERE SubcategoryName = @SubcategoryName), @Notes)";
 
-        private void btnImport_Click(object sender, EventArgs e)
+            using (SqlConnection connection = clsTransactionFrm.GetConnection())
+            using (SqlCommand command = new SqlCommand(insertQuery, connection))
+            {
+                connection.Open();
+
+                command.Parameters.AddWithValue("@TransactionDate", myTrans._date);
+                command.Parameters.AddWithValue("@Merchant", myTrans._merchant);
+                command.Parameters.AddWithValue("@Amount", myTrans._amount);
+                command.Parameters.AddWithValue("@SubcategoryName", myTrans._SubcategoryName);
+                command.Parameters.AddWithValue("@Notes", myTrans._Notes);
+
+                Try
+
+                {
+                    int numberOfRows = command.ExecuteNonQuery();
+                }
+
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
+            }
+
+            return NumberOfRows
+        }
+
+        private int Read()
         {
+            int numberOfRows = 0;
+
             OpenFileDialog theDialog = new OpenFileDialog();
             theDialog.Title = "Open Text File";
             theDialog.Filter = "TXT files|*.txt";
             theDialog.InitialDirectory = @"C:\Desktop\";
-           
+
             if (theDialog.ShowDialog() == DialogResult.OK)
-            {                                               
+            {
                 string filename = theDialog.FileName;
-                
+
                 StreamReader inputFile = File.OpenText(filename);
 
                 while (!inputFile.EndOfStream)
                 {
                     string line = inputFile.ReadLine();
-
                     string[] transactionList = line.Split('\t');
-                    
-                    
+
                     myTransaction._date = DateTime.Parse(transactionList[0]);
                     myTransaction._merchant = transactionList[1];
                     myTransaction._amount = decimal.Parse(transactionList[2]);
+                    myTransaction._SubcategoryName = "";
                     myTransaction._notes = "";
 
-                    //Saving imported data to database
-                string insertQuery = "INSERT INTO tblMainData VALUES (@TransactionDate, @Merchant, @Amount, (SELECT SubcategoryId FROM tblSubcategory WHERE SubcategoryName = @SubcategoryName), @Notes)";
-                SqlConnection connection = clsTransactionFrm.GetConnection();
-
-                using (SqlCommand command = new SqlCommand(insertQuery, connection))
-                {
-                    connection.Open();
-
-                    command.Parameters.AddWithValue("@TransactionDate", myTransaction._date);
-                    command.Parameters.AddWithValue("@Merchant", myTransaction._merchant);
-                    command.Parameters.AddWithValue("@Amount", myTransaction._amount);
-                    command.Parameters.AddWithValue("@SubcategoryName", "");
-                    command.Parameters.AddWithValue("@Notes", "");
-
-                    transactionNumber += command.ExecuteNonQuery();
+                    numberOfRows += Test(myTransaction);
                 }
-
-                    
-                }
-
-                MessageBox.Show(transactionNumber + " Transactions Saved");
-                PopulateCboSubcategory();
-                PopulateListView();
             }
-            
+
+            return numberOfRows;
         }
     }
 }
