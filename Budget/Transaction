@@ -20,6 +20,7 @@ namespace Budget
         }
 
         transaction myTransaction = new transaction();
+        int numberOfRows = 0;
 
         private void frmTransaction_Load(object sender, EventArgs e)
         {
@@ -32,12 +33,12 @@ namespace Budget
             myTransaction._date = DateTime.Parse(mskTxtDate.Text);
             myTransaction._merchant = txtMerchant.Text;
             myTransaction._amount = decimal.Parse(txtAmount.Text);
-            myTransaction._SubcategoryName = cboSubcategory.Text;
+            //myTransaction._SubcategoryName = cboSubcategory.Text;
             myTransaction._notes = txtNotes.Text;
 
             Test(myTransaction);
 
-            if (NumberOfRows > 1)
+            if (numberOfRows > 1)
             {
                 MessageBox.Show("Transaction Saved");
 
@@ -139,7 +140,7 @@ namespace Budget
             }
         }
 
-        private int Test(Transaction myTrans)
+        private int Test(transaction myTrans)
         {
             string insertQuery = "INSERT INTO tblMainData VALUES (@TransactionDate, @Merchant, @Amount," +
             "(SELECT SubcategoryId FROM tblSubcategory WHERE SubcategoryName = @SubcategoryName), @Notes)";
@@ -152,13 +153,12 @@ namespace Budget
                 command.Parameters.AddWithValue("@TransactionDate", myTrans._date);
                 command.Parameters.AddWithValue("@Merchant", myTrans._merchant);
                 command.Parameters.AddWithValue("@Amount", myTrans._amount);
-                command.Parameters.AddWithValue("@SubcategoryName", myTrans._SubcategoryName);
-                command.Parameters.AddWithValue("@Notes", myTrans._Notes);
+                command.Parameters.AddWithValue("@SubcategoryName", ""/*myTrans._SubcategoryName*/);
+                command.Parameters.AddWithValue("@Notes", myTrans._notes);
 
-                Try
-
+                try
                 {
-                    int numberOfRows = command.ExecuteNonQuery();
+                    numberOfRows = command.ExecuteNonQuery();
                 }
 
                 catch (Exception ex)
@@ -167,7 +167,7 @@ namespace Budget
                 }
             }
 
-            return NumberOfRows
+            return numberOfRows;
         }
 
         private int Read()
@@ -193,7 +193,7 @@ namespace Budget
                     myTransaction._date = DateTime.Parse(transactionList[0]);
                     myTransaction._merchant = transactionList[1];
                     myTransaction._amount = decimal.Parse(transactionList[2]);
-                    myTransaction._SubcategoryName = "";
+                    //myTransaction._SubcategoryName = "";
                     myTransaction._notes = "";
 
                     numberOfRows += Test(myTransaction);
