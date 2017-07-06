@@ -1,0 +1,107 @@
+Private Sub fetchDepositChecks()
+       
+  Dim sql As String
+  Dim checkNo As String
+  Dim invNo As String
+  Dim dateCrit As String
+  Dim strPayer As String
+  
+  strPayer = ""
+  dateCrit = ""
+ 'Stop
+  DoCmd.Hourglass True
+  
+  
+  
+  If Len(txtSelCheckNum) > 0 Then
+    checkNo = txtSelCheckNum
+  End If
+  
+  If Len(TextInvoiceNumber) > 0 Then
+    invNo = TextInvoiceNumber
+  End If
+  
+  'date processing
+  If Len(txtSelStartDate) = 0 And Len(txtSelEndDate) = 0 Then
+    dateCrit = ""
+  ElseIf Len(txtSelEndDate) = 0 Then
+    dateCrit = " DATE_RECEIVED >= #" & txtSelStartDate & "# "
+  ElseIf Len(txtSelStartDate) = 0 Then
+    dateCrit = " DATE_RECEIVED <= #" & txtSelEndDate & "# "
+  Else    'must be as start and end date
+    dateCrit = " DATE_RECEIVED between #" & txtSelStartDate & _
+                "# and #" & txtSelEndDate & "# "
+  End If
+  
+
+  If Len(txtPayerName) > 0 Then
+    If InStr(1, txtPayerName, "*", vbTextCompare) > 0 Then
+        strPayer = " ADC.SOURCE like '" & txtPayerName & "' "
+    Else
+        strPayer = " ADC.SOURCE = '" & txtPayerName & "' "
+    End If
+  End If
+  
+  
+  'sql where clause building
+  sql = SQL_SELECT & "WHERE ADC.ACCOUNT_KEY = " & cboAccountKey.Value
+  
+  If Len(checkNo) > 0 Then
+    sql = sql & " and Ref_Num = '" & Trim$(checkNo) & "'"
+  End If
+   
+  If Len(invNo) > 0 And IsNumeric(invNo) Then
+    sql = sql & " and Invoice_Ref = " & Trim$(invNo)
+  End If
+   
+  If Len(selPrint) > 0 Then
+    sql = sql & " and " & selPrint
+  End If
+  If Len(dateCrit) > 0 Then
+    sql = sql & " and " & dateCrit
+  End If
+  If Len(strPayer) > 0 Then
+    sql = sql & " and " & strPayer
+  End If
+
+  lstDepositChecks.RowSource = sql
+  lstDepositChecks.Requery
+  
+  DoCmd.Hourglass False
+    
+  cmdView.enabled = False
+  
+End Sub
+
+Private Sub lstDepositChecks_MouseDown(Button As Integer, Shift As Integer, X As Single, Y As Single)
+    lstBoxColumnSort lstDepositChecks, X, Y
+End Sub
+
+Private Sub TextInvoiceNumber_AfterUpdate()
+  fetchDepositChecks
+End Sub
+
+Private Sub txtPayerName_LostFocus()
+  fetchDepositChecks
+End Sub
+
+Private Sub txtSelCheckNum_AfterUpdate()
+  fetchDepositChecks
+End Sub
+
+Private Sub txtSelEndDate_AfterUpdate()
+  If IsNull(txtSelEndDate) Then
+    txtSelEndDate = ""
+  End If
+  
+  fetchDepositChecks
+End Sub
+
+Private Sub txtSelStartDate_AfterUpdate()
+  
+  If IsNull(txtSelStartDate) Then
+    txtSelStartDate = ""
+  End If
+    
+  fetchDepositChecks
+End Sub
