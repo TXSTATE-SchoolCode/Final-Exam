@@ -1,0 +1,358 @@
+if (!string.IsNullOrEmpty(txtDateFrom.Text) && string.IsNullOrEmpty(txtDateTo.Text) && string.IsNullOrEmpty(txtDate.Text) && string.IsNullOrEmpty(txtMerchant.Text) && string.IsNullOrEmpty(txtAmount.Text) && string.IsNullOrEmpty(txtSubCategory.Text))
+            {
+                dataGridView1.ReadOnly = true;
+                var dataTable = ClsSubcategoryFrm.GetDataTableTblMainData();
+                dataGridView1.DataSource = dataTable;
+
+                ClsSubcategoryFrm.FormatDataGridView(dataGridView1);
+
+                txtDate.Width = dataGridView1.Columns[1].Width;
+                txtMerchant.Width = dataGridView1.Columns[2].Width;
+                txtAmount.Width = dataGridView1.Columns[3].Width;
+
+                dataTable.DefaultView.RowFilter = string.Format("[TransactionDate] >= '{0}'", txtDateFrom.Text);
+
+                dataGridView1.Refresh();
+            }
+
+            else if (!string.IsNullOrEmpty(txtDateFrom.Text) && !string.IsNullOrEmpty(txtDateTo.Text) && string.IsNullOrEmpty(txtDate.Text) && string.IsNullOrEmpty(txtMerchant.Text) && string.IsNullOrEmpty(txtAmount.Text) && string.IsNullOrEmpty(txtSubCategory.Text))
+            {
+                dataGridView1.ReadOnly = true;
+                var dataTable = ClsSubcategoryFrm.GetDataTableTblMainData();
+                dataGridView1.DataSource = dataTable;
+
+                ClsSubcategoryFrm.FormatDataGridView(dataGridView1);
+
+                txtDate.Width = dataGridView1.Columns[1].Width;
+                txtMerchant.Width = dataGridView1.Columns[2].Width;
+                txtAmount.Width = dataGridView1.Columns[3].Width;
+
+                dataTable.DefaultView.RowFilter = string.Format("[TransactionDate] >= '{0}' AND [TransactionDate] <= '{1}'", txtDateFrom.Text, txtDateTo.Text);
+
+                dataGridView1.Refresh();
+            }
+
+            else if (!string.IsNullOrEmpty(txtDateFrom.Text) && !string.IsNullOrEmpty(txtDateTo.Text) && !string.IsNullOrEmpty(txtDate.Text) && string.IsNullOrEmpty(txtMerchant.Text) && string.IsNullOrEmpty(txtAmount.Text) && string.IsNullOrEmpty(txtSubCategory.Text))
+            {
+                dataGridView1.ReadOnly = true;
+                var dataTable = ClsSubcategoryFrm.GetDataTableTblMainData();
+                dataGridView1.DataSource = dataTable;
+
+                ClsSubcategoryFrm.FormatDataGridView(dataGridView1);
+
+                txtDate.Width = dataGridView1.Columns[1].Width;
+                txtMerchant.Width = dataGridView1.Columns[2].Width;
+                txtAmount.Width = dataGridView1.Columns[3].Width;
+
+                dataTable.DefaultView.RowFilter = string.Format("[TransactionDate] >= '{0}' AND [TransactionDate] <= '{1}' AND [TransactionDate] = '{2}'", txtDateFrom.Text, txtDateTo.Text, txtDate.Text);
+
+                dataGridView1.Refresh();
+            }
+
+            else if (!string.IsNullOrEmpty(txtDateFrom.Text) && !string.IsNullOrEmpty(txtDateTo.Text) && !string.IsNullOrEmpty(txtDate.Text) && !string.IsNullOrEmpty(txtMerchant.Text) && string.IsNullOrEmpty(txtAmount.Text) && string.IsNullOrEmpty(txtSubCategory.Text))
+            {
+                dataGridView1.ReadOnly = true;
+                var dataTable = ClsSubcategoryFrm.GetDataTableTblMainData();
+                dataGridView1.DataSource = dataTable;
+
+                ClsSubcategoryFrm.FormatDataGridView(dataGridView1);
+
+                txtDate.Width = dataGridView1.Columns[1].Width;
+                txtMerchant.Width = dataGridView1.Columns[2].Width;
+                txtAmount.Width = dataGridView1.Columns[3].Width;
+
+                dataTable.DefaultView.RowFilter = string.Format("[TransactionDate] >= '{0}' AND [TransactionDate] <= '{1}' AND [TransactionDate = '{2}' AND [Merchant] LIKE '%{3}%'", txtDateFrom.Text, txtDateTo.Text, txtDate.Text, txtMerchant.Text);
+
+                dataGridView1.Refresh();
+            }
+
+            else if (!string.IsNullOrEmpty(txtDateFrom.Text) && !string.IsNullOrEmpty(txtDateTo.Text) && !string.IsNullOrEmpty(txtDate.Text) && !string.IsNullOrEmpty(txtMerchant.Text) && !string.IsNullOrEmpty(txtAmount.Text) && string.IsNullOrEmpty(txtSubCategory.Text))
+            {
+                dataGridView1.ReadOnly = true;
+                var dataTable = ClsSubcategoryFrm.GetDataTableTblMainData();
+                dataGridView1.DataSource = dataTable;
+
+                ClsSubcategoryFrm.FormatDataGridView(dataGridView1);
+
+                txtDate.Width = dataGridView1.Columns[1].Width;
+                txtMerchant.Width = dataGridView1.Columns[2].Width;
+                txtAmount.Width = dataGridView1.Columns[3].Width;
+
+                dataTable.DefaultView.RowFilter = string.Format("[TransactionDate] >= '{0}' AND [TransactionDate] <= '{1}' AND [TransactionDate = '{2}' AND [Merchant] LIKE '%{3}%' AND [Amount] = '-{4}'", txtDateFrom.Text, txtDateTo.Text, txtDate.Text, txtMerchant.Text, txtAmount.Text);
+
+                dataGridView1.Refresh();
+            }
+
+            else if (!string.IsNullOrEmpty(txtDateFrom.Text) && !string.IsNullOrEmpty(txtDateTo.Text) && !string.IsNullOrEmpty(txtDate.Text) && !string.IsNullOrEmpty(txtMerchant.Text) && !string.IsNullOrEmpty(txtAmount.Text) && !string.IsNullOrEmpty(txtSubCategory.Text))
+            {
+                dataGridView1.ReadOnly = true;
+                var dataTable = ClsSubcategoryFrm.GetDataTableTblMainData();
+                dataGridView1.DataSource = dataTable;
+
+                ClsSubcategoryFrm.FormatDataGridView(dataGridView1);
+
+                txtDate.Width = dataGridView1.Columns[1].Width;
+                txtMerchant.Width = dataGridView1.Columns[2].Width;
+                txtAmount.Width = dataGridView1.Columns[3].Width;
+
+                dataTable.DefaultView.RowFilter = string.Format("[TransactionDate] >= '{0}' AND [TransactionDate] <= '{1}' AND [TransactionDate = '{2}' AND [Merchant] LIKE '%{3}%' AND [Amount] = '-{4}' AND [SubcategoryName] LIKE '%{5}%", txtDateFrom.Text, txtDateTo.Text, txtDate.Text, txtMerchant.Text, txtAmount.Text, txtSubCategory.Text);
+
+                dataGridView1.Refresh();
+            }
+
+            else if (string.IsNullOrEmpty(txtDateFrom.Text) && !string.IsNullOrEmpty(txtDateTo.Text) && string.IsNullOrEmpty(txtDate.Text) && string.IsNullOrEmpty(txtMerchant.Text) && string.IsNullOrEmpty(txtAmount.Text) && string.IsNullOrEmpty(txtSubCategory.Text))
+            {
+                dataGridView1.ReadOnly = true;
+                var dataTable = ClsSubcategoryFrm.GetDataTableTblMainData();
+                dataGridView1.DataSource = dataTable;
+
+                ClsSubcategoryFrm.FormatDataGridView(dataGridView1);
+
+                txtDate.Width = dataGridView1.Columns[1].Width;
+                txtMerchant.Width = dataGridView1.Columns[2].Width;
+                txtAmount.Width = dataGridView1.Columns[3].Width;
+
+                dataTable.DefaultView.RowFilter = string.Format("[TransactionDate] <= '{0}'", txtDateTo.Text);
+
+                dataGridView1.Refresh();
+            }
+
+            else if (string.IsNullOrEmpty(txtDateFrom.Text) && !string.IsNullOrEmpty(txtDateTo.Text) && !string.IsNullOrEmpty(txtDate.Text) && string.IsNullOrEmpty(txtMerchant.Text) && string.IsNullOrEmpty(txtAmount.Text) && string.IsNullOrEmpty(txtSubCategory.Text))
+            {
+                dataGridView1.ReadOnly = true;
+                var dataTable = ClsSubcategoryFrm.GetDataTableTblMainData();
+                dataGridView1.DataSource = dataTable;
+
+                ClsSubcategoryFrm.FormatDataGridView(dataGridView1);
+
+                txtDate.Width = dataGridView1.Columns[1].Width;
+                txtMerchant.Width = dataGridView1.Columns[2].Width;
+                txtAmount.Width = dataGridView1.Columns[3].Width;
+
+                dataTable.DefaultView.RowFilter = string.Format("[TransactionDate] <= '{0}' AND [TransactionDate] = '{1}'", txtDateTo.Text, txtDate.Text);
+
+                dataGridView1.Refresh();
+            }
+
+            else if (string.IsNullOrEmpty(txtDateFrom.Text) && !string.IsNullOrEmpty(txtDateTo.Text) && !string.IsNullOrEmpty(txtDate.Text) && !string.IsNullOrEmpty(txtMerchant.Text) && string.IsNullOrEmpty(txtAmount.Text) && string.IsNullOrEmpty(txtSubCategory.Text))
+            {
+                dataGridView1.ReadOnly = true;
+                var dataTable = ClsSubcategoryFrm.GetDataTableTblMainData();
+                dataGridView1.DataSource = dataTable;
+
+                ClsSubcategoryFrm.FormatDataGridView(dataGridView1);
+
+                txtDate.Width = dataGridView1.Columns[1].Width;
+                txtMerchant.Width = dataGridView1.Columns[2].Width;
+                txtAmount.Width = dataGridView1.Columns[3].Width;
+
+                dataTable.DefaultView.RowFilter = string.Format("[TransactionDate] <= '{0}' AND [TransactionDate] = '{1}' AND [Merchant] LIKE '%{2}%'", txtDateTo.Text, txtDate.Text, txtMerchant.Text);
+
+                dataGridView1.Refresh();
+            }
+
+            else if (string.IsNullOrEmpty(txtDateFrom.Text) && !string.IsNullOrEmpty(txtDateTo.Text) && !string.IsNullOrEmpty(txtDate.Text) && !string.IsNullOrEmpty(txtMerchant.Text) && !string.IsNullOrEmpty(txtAmount.Text) && string.IsNullOrEmpty(txtSubCategory.Text))
+            {
+                dataGridView1.ReadOnly = true;
+                var dataTable = ClsSubcategoryFrm.GetDataTableTblMainData();
+                dataGridView1.DataSource = dataTable;
+
+                ClsSubcategoryFrm.FormatDataGridView(dataGridView1);
+
+                txtDate.Width = dataGridView1.Columns[1].Width;
+                txtMerchant.Width = dataGridView1.Columns[2].Width;
+                txtAmount.Width = dataGridView1.Columns[3].Width;
+
+                dataTable.DefaultView.RowFilter = string.Format("[TransactionDate] <= '{0}' AND [TransactionDate] = '{1}' AND [Merchant] LIKE '%{2}%' AND [Amount] = '-{3}'", txtDateTo.Text, txtDate.Text, txtMerchant.Text, txtAmount.Text);
+
+                dataGridView1.Refresh();
+            }
+
+            else if (string.IsNullOrEmpty(txtDateFrom.Text) && !string.IsNullOrEmpty(txtDateTo.Text) && !string.IsNullOrEmpty(txtDate.Text) && !string.IsNullOrEmpty(txtMerchant.Text) && !string.IsNullOrEmpty(txtAmount.Text) && !string.IsNullOrEmpty(txtSubCategory.Text))
+            {
+                dataGridView1.ReadOnly = true;
+                var dataTable = ClsSubcategoryFrm.GetDataTableTblMainData();
+                dataGridView1.DataSource = dataTable;
+
+                ClsSubcategoryFrm.FormatDataGridView(dataGridView1);
+
+                txtDate.Width = dataGridView1.Columns[1].Width;
+                txtMerchant.Width = dataGridView1.Columns[2].Width;
+                txtAmount.Width = dataGridView1.Columns[3].Width;
+
+                dataTable.DefaultView.RowFilter = string.Format("[TransactionDate] <= '{0}' AND [TransactionDate] = '{1}' AND [Merchant] LIKE '%{2}%' AND [Amount] = '-{3}' AND [SubcategoryName] LIKE '%{4}%", txtDateTo.Text, txtDate.Text, txtMerchant.Text, txtAmount.Text, txtSubCategory.Text);
+
+                dataGridView1.Refresh();
+            }
+
+            else if (string.IsNullOrEmpty(txtDateFrom.Text) && string.IsNullOrEmpty(txtDateTo.Text) && !string.IsNullOrEmpty(txtDate.Text) && string.IsNullOrEmpty(txtMerchant.Text) && string.IsNullOrEmpty(txtAmount.Text) && string.IsNullOrEmpty(txtSubCategory.Text))
+            {
+                dataGridView1.ReadOnly = true;
+                var dataTable = ClsSubcategoryFrm.GetDataTableTblMainData();
+                dataGridView1.DataSource = dataTable;
+
+                ClsSubcategoryFrm.FormatDataGridView(dataGridView1);
+
+                txtDate.Width = dataGridView1.Columns[1].Width;
+                txtMerchant.Width = dataGridView1.Columns[2].Width;
+                txtAmount.Width = dataGridView1.Columns[3].Width;
+
+                dataTable.DefaultView.RowFilter = string.Format("[TransactionDate] = '{0}'", txtDate.Text);
+
+                dataGridView1.Refresh();
+            }
+
+            else if (string.IsNullOrEmpty(txtDateFrom.Text) && string.IsNullOrEmpty(txtDateTo.Text) && !string.IsNullOrEmpty(txtDate.Text) && !string.IsNullOrEmpty(txtMerchant.Text) && string.IsNullOrEmpty(txtAmount.Text) && string.IsNullOrEmpty(txtSubCategory.Text))
+            {
+                dataGridView1.ReadOnly = true;
+                var dataTable = ClsSubcategoryFrm.GetDataTableTblMainData();
+                dataGridView1.DataSource = dataTable;
+
+                ClsSubcategoryFrm.FormatDataGridView(dataGridView1);
+
+                txtDate.Width = dataGridView1.Columns[1].Width;
+                txtMerchant.Width = dataGridView1.Columns[2].Width;
+                txtAmount.Width = dataGridView1.Columns[3].Width;
+
+                dataTable.DefaultView.RowFilter = string.Format("[TransactionDate] = '{0}' AND [Merchant] LIKE '%{1}%'", txtDate.Text, txtMerchant.Text);
+
+                dataGridView1.Refresh();
+            }
+
+            else if (string.IsNullOrEmpty(txtDateFrom.Text) && string.IsNullOrEmpty(txtDateTo.Text) && !string.IsNullOrEmpty(txtDate.Text) && !string.IsNullOrEmpty(txtMerchant.Text) && !string.IsNullOrEmpty(txtAmount.Text) && string.IsNullOrEmpty(txtSubCategory.Text))
+            {
+                dataGridView1.ReadOnly = true;
+                var dataTable = ClsSubcategoryFrm.GetDataTableTblMainData();
+                dataGridView1.DataSource = dataTable;
+
+                ClsSubcategoryFrm.FormatDataGridView(dataGridView1);
+
+                txtDate.Width = dataGridView1.Columns[1].Width;
+                txtMerchant.Width = dataGridView1.Columns[2].Width;
+                txtAmount.Width = dataGridView1.Columns[3].Width;
+
+                dataTable.DefaultView.RowFilter = string.Format("[TransactionDate] = '{0}' AND [Merchant] LIKE '%{1}%' AND [Amount] = '-{2}'", txtDate.Text, txtMerchant.Text, txtAmount.Text);
+
+                dataGridView1.Refresh();
+            }
+
+            else if (string.IsNullOrEmpty(txtDateFrom.Text) && string.IsNullOrEmpty(txtDateTo.Text) && !string.IsNullOrEmpty(txtDate.Text) && !string.IsNullOrEmpty(txtMerchant.Text) && !string.IsNullOrEmpty(txtAmount.Text) && !string.IsNullOrEmpty(txtSubCategory.Text))
+            {
+                dataGridView1.ReadOnly = true;
+                var dataTable = ClsSubcategoryFrm.GetDataTableTblMainData();
+                dataGridView1.DataSource = dataTable;
+
+                ClsSubcategoryFrm.FormatDataGridView(dataGridView1);
+
+                txtDate.Width = dataGridView1.Columns[1].Width;
+                txtMerchant.Width = dataGridView1.Columns[2].Width;
+                txtAmount.Width = dataGridView1.Columns[3].Width;
+
+                dataTable.DefaultView.RowFilter = string.Format("[TransactionDate] = '{0}' AND [Merchant] LIKE '%{1}%' AND [Amount] = '-{2}' AND [SubcategoryName] LIKE '%{3}%", txtDate.Text, txtMerchant.Text, txtAmount.Text, txtSubCategory.Text);
+
+                dataGridView1.Refresh();
+            }
+
+            else if (string.IsNullOrEmpty(txtDateFrom.Text) && string.IsNullOrEmpty(txtDateTo.Text) && string.IsNullOrEmpty(txtDate.Text) && !string.IsNullOrEmpty(txtMerchant.Text) && string.IsNullOrEmpty(txtAmount.Text) && string.IsNullOrEmpty(txtSubCategory.Text))
+            {
+                dataGridView1.ReadOnly = true;
+                var dataTable = ClsSubcategoryFrm.GetDataTableTblMainData();
+                dataGridView1.DataSource = dataTable;
+
+                ClsSubcategoryFrm.FormatDataGridView(dataGridView1);
+
+                txtDate.Width = dataGridView1.Columns[1].Width;
+                txtMerchant.Width = dataGridView1.Columns[2].Width;
+                txtAmount.Width = dataGridView1.Columns[3].Width;
+
+                dataTable.DefaultView.RowFilter = string.Format("[Merchant] LIKE '%{0}%'", txtMerchant.Text);
+
+                dataGridView1.Refresh();
+            }
+
+            else if (string.IsNullOrEmpty(txtDateFrom.Text) && string.IsNullOrEmpty(txtDateTo.Text) && string.IsNullOrEmpty(txtDate.Text) && !string.IsNullOrEmpty(txtMerchant.Text) && !string.IsNullOrEmpty(txtAmount.Text) && string.IsNullOrEmpty(txtSubCategory.Text))
+            {
+                dataGridView1.ReadOnly = true;
+                var dataTable = ClsSubcategoryFrm.GetDataTableTblMainData();
+                dataGridView1.DataSource = dataTable;
+
+                ClsSubcategoryFrm.FormatDataGridView(dataGridView1);
+
+                txtDate.Width = dataGridView1.Columns[1].Width;
+                txtMerchant.Width = dataGridView1.Columns[2].Width;
+                txtAmount.Width = dataGridView1.Columns[3].Width;
+
+                dataTable.DefaultView.RowFilter = string.Format("[Merchant] LIKE '%{0}%' AND [Amount] = '-{1}'", txtMerchant.Text, txtAmount.Text);
+
+                dataGridView1.Refresh();
+            }
+
+            else if (string.IsNullOrEmpty(txtDateFrom.Text) && string.IsNullOrEmpty(txtDateTo.Text) && string.IsNullOrEmpty(txtDate.Text) && !string.IsNullOrEmpty(txtMerchant.Text) && !string.IsNullOrEmpty(txtAmount.Text) && !string.IsNullOrEmpty(txtSubCategory.Text))
+            {
+                dataGridView1.ReadOnly = true;
+                var dataTable = ClsSubcategoryFrm.GetDataTableTblMainData();
+                dataGridView1.DataSource = dataTable;
+
+                ClsSubcategoryFrm.FormatDataGridView(dataGridView1);
+
+                txtDate.Width = dataGridView1.Columns[1].Width;
+                txtMerchant.Width = dataGridView1.Columns[2].Width;
+                txtAmount.Width = dataGridView1.Columns[3].Width;
+
+                dataTable.DefaultView.RowFilter = string.Format("[Merchant] LIKE '%{0}%' AND [Amount] = '-{4}' AND [SubcategoryName] LIKE '%{5}%", txtMerchant.Text, txtAmount.Text, txtSubCategory.Text);
+
+                dataGridView1.Refresh();
+            }
+
+            else if (string.IsNullOrEmpty(txtDateFrom.Text) && string.IsNullOrEmpty(txtDateTo.Text) && string.IsNullOrEmpty(txtDate.Text) && string.IsNullOrEmpty(txtMerchant.Text) && !string.IsNullOrEmpty(txtAmount.Text) && string.IsNullOrEmpty(txtSubCategory.Text))
+            {
+                dataGridView1.ReadOnly = true;
+                var dataTable = ClsSubcategoryFrm.GetDataTableTblMainData();
+                dataGridView1.DataSource = dataTable;
+
+                ClsSubcategoryFrm.FormatDataGridView(dataGridView1);
+
+                txtDate.Width = dataGridView1.Columns[1].Width;
+                txtMerchant.Width = dataGridView1.Columns[2].Width;
+                txtAmount.Width = dataGridView1.Columns[3].Width;
+
+                dataTable.DefaultView.RowFilter = string.Format("[Amount] = '-{0}'", txtAmount.Text);
+
+                dataGridView1.Refresh();
+            }
+
+            else if (string.IsNullOrEmpty(txtDateFrom.Text) && string.IsNullOrEmpty(txtDateTo.Text) && string.IsNullOrEmpty(txtDate.Text) && string.IsNullOrEmpty(txtMerchant.Text) && !string.IsNullOrEmpty(txtAmount.Text) && !string.IsNullOrEmpty(txtSubCategory.Text))
+            {
+                dataGridView1.ReadOnly = true;
+                var dataTable = ClsSubcategoryFrm.GetDataTableTblMainData();
+                dataGridView1.DataSource = dataTable;
+
+                ClsSubcategoryFrm.FormatDataGridView(dataGridView1);
+
+                txtDate.Width = dataGridView1.Columns[1].Width;
+                txtMerchant.Width = dataGridView1.Columns[2].Width;
+                txtAmount.Width = dataGridView1.Columns[3].Width;
+
+                dataTable.DefaultView.RowFilter = string.Format("[Amount] = '-{0}' AND [SubcategoryName] LIKE '%{1}%", txtAmount.Text, txtSubCategory.Text);
+
+                dataGridView1.Refresh();
+            }
+
+            else if (string.IsNullOrEmpty(txtDateFrom.Text) && string.IsNullOrEmpty(txtDateTo.Text) && string.IsNullOrEmpty(txtDate.Text) && string.IsNullOrEmpty(txtMerchant.Text) && string.IsNullOrEmpty(txtAmount.Text) && !string.IsNullOrEmpty(txtSubCategory.Text))
+            {
+                dataGridView1.ReadOnly = true;
+                var dataTable = ClsSubcategoryFrm.GetDataTableTblMainData();
+                dataGridView1.DataSource = dataTable;
+
+                ClsSubcategoryFrm.FormatDataGridView(dataGridView1);
+
+                txtDate.Width = dataGridView1.Columns[1].Width;
+                txtMerchant.Width = dataGridView1.Columns[2].Width;
+                txtAmount.Width = dataGridView1.Columns[3].Width;
+
+                dataTable.DefaultView.RowFilter = string.Format("[SubcategoryName] LIKE '%{0}%", txtSubCategory.Text);
+
+                dataGridView1.Refresh();
+            }
+
+            return myGridView;
