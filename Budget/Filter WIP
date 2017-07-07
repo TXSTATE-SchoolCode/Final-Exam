@@ -1,0 +1,75 @@
+{
+            string sql = "";
+            string dateCriteria = "";
+            string merchant = "";
+            string amount = "";
+            string subCategoryName = "";
+
+            if (!string.IsNullOrEmpty(txtAmount.Text))
+            {
+                amount = txtAmount.Text;
+            }
+
+            if (!string.IsNullOrEmpty(txtSubCategory.Text))
+            {
+                subCategoryName = txtSubCategory.Text;
+            }
+
+            //date processing
+            if (string.IsNullOrEmpty(txtStartDate.Text) && string.IsNullOrEmpty(txtEndDate.Text) && string.IsNullOrEmpty(txtDate.Text))
+            {
+                dateCriteria = "";
+            }
+            
+            else if (string.IsNullOrEmpty(txtEndDate.Text) && string.IsNullOrEmpty(txtDate.Text))
+            {
+                dateCriteria = " TransactionDate >= #" + txtStartDate.Text + "# ";
+            }
+            else if (string.IsNullOrEmpty(txtStartDate.Text) && string.IsNullOrEmpty(txtDate.Text))
+            {
+                dateCriteria = " TransctionDate <= #" + txtEndDate.Text + "# ";
+            }
+            else if (!string.IsNullOrEmpty(txtDate.Text) && string.IsNullOrEmpty(txtStartDate.Text) &&
+                     string.IsNullOrEmpty(txtEndDate.Text))
+            {
+                dateCriteria = " TransactionDate = #" + txtDate.Text + "# ";
+            }
+            else //must be as start and end date
+            {
+                dateCriteria = " TransctionDate BETWEEN #" + txtStartDate.Text + "# and #" + txtEndDate.Text + "# ";
+            }
+
+
+            if (string.IsNullOrEmpty(txtMerchant.Text))
+            {
+                merchant = " Merchant = '" + txtMerchant + "' ";
+            }
+            else
+            {
+                merchant = " Merchant LIKE '" + txtMerchant.Text + "' ";
+                
+            }
+
+            //sql where clause building
+            if Len(checkNo) > 0 Then
+                sql = sql & " and Ref_Num = '" & Trim$(checkNo) & "'"
+            End If
+   
+            If Len(invNo) > 0 And IsNumeric(invNo) Then
+                sql = sql & " and Invoice_Ref = " & Trim$(invNo)
+                End If
+   
+                If Len(selPrint) > 0 Then
+                sql = sql & " and " & selPrint
+            End If
+            If Len(dateCrit) > 0 Then
+                sql = sql & " and " & dateCrit
+            End If
+            If Len(strPayer) > 0 Then
+                sql = sql & " and " & strPayer
+            End If
+
+            lstDepositChecks.RowSource = sql
+            lstDepositChecks.Requery
+
+        }
