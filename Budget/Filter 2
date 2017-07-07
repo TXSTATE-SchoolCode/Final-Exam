@@ -1,0 +1,259 @@
+Option Compare Database   'Use database order for string comparisons
+
+Const SQL_SELECT As String = "SELECT CR.CHECK_REQ_KEY as [CR Key], CR.ACCOUNT_KEY AS Acct, " & _
+      "CR.SYSTEM AS [System], CR.MEMO AS Descr, CR.DATE_REQ AS [Req Date-Time], " & _
+      "CR.CHECKS_REQUESTED AS [# Req], CR.AMOUNT_REQUESTED AS [Amount], " & _
+      "CR.DATE_PRINTED AS [Date Printed], [DELETED] " & _
+      " FROM CHECK_REQUEST AS CR "
+      
+Const SQL_ORDER As String = " Order by CR.CHECK_REQ_KEY"
+
+Private selPrint As String
+Private selStDate As Date
+Private selEndDate As Date
+
+Private Sub cmdClose_Click()
+  DoCmd.Close
+End Sub
+
+Private Sub cmdDeleteRequest_Click()
+  Dim mbChoice As Integer
+  Dim crKey As Long
+  Dim sql As String
+  Dim ws As Workspace
+  Dim qd As QueryDef
+  
+  If lstCheckRequests.Column(7) <> "" Then
+    MsgBox "You may not delete a request that has already been printed."
+    Exit Sub
+  Else
+    mbChoice = MsgBox("Are you sure you want to delete this check request?", _
+                          vbYesNo, "Confirm Deletion")
+    If mbChoice = vbYes Then    'user wants to delete
+      Set ws = DBEngine(0)
+      Set qd = ws(0).QueryDefs("qPtGeneralExec")
+      crKey = lstCheckRequests.Column(0)
+      
+On Error Resume Next
+      
+      ws.BeginTrans
+      
+      qd.sql = "UPDATE CHECK_REQUEST SET DELETED = 1 where CHECK_REQ_KEY = " & crKey
+      qd.Execute
+      
+      'remove from claims data also
+      qd.sql = "Exec bba_claims.dbo.uspuClaimsCheckRequestKeyRemove " & crKey
+      qd.Execute
+      
+      If Err = 0 Then
+        ws.CommitTrans
+        MsgBox "Check Request marked deleted."
+        fetchCheckRequests
+      Else
+        ws.Rollback
+        MsgBox "Unable to set check request status to deleted.  Error " & Err & " - " & Error$
+      End If
+      
+    End If
+  End If
+End Sub
+
+Private Sub cmdPrintChecks_Click()
+  Dim rc As Long
+  Dim cp As CCheckPrinter
+  Dim ans As Integer
+  
+  If lstCheckRequests.Column(7) <> "" Then
+    ans = MsgBox("The checks in this request have already been printed.  " & _
+            "If you wish to reprint the selected checks you must open " & _
+            "the check request and select the 'Print Checks' button on that " & _
+            "form.", vbOKOnly, "Confirm Check Reprinting")
+    Exit Sub
+  End If
+  
+  Set cp = New CCheckPrinter
+  With cp
+    .CheckReqKey = lstCheckRequests.Column(0)
+    .CrSystem = lstCheckRequests.Column(2)
+    .PrintSingle = False
+    rc = .PrintChecks()
+  End With
+  Set cp = Nothing
+  fetchCheckRequests
+End Sub
+
+Private Sub cmdPrintRequest_Click()
+  Dim crit As String
+  crit = "CHECK_REQ_KEY = " & lstCheckRequests.Column(0)
+  On Error Resume Next
+  
+  DoCmd.OpenReport "rptACHxmit", acViewPreview, , crit
+  DoCmd.OpenReport "rptRequestChecks", acViewPreview, , crit
+End Sub
+
+Private Sub cmdViewAllocation_Click()
+  DoCmd.OpenQuery "qsVerifyMoneyOnHand"
+End Sub
+
+Private Sub cmdViewRequest_Click()
+  Dim key As Long
+  Dim qd As QueryDef
+  Dim f As New Form_frmCheckRequest
+  
+  key = Nz(Me.lstCheckRequests.Column(0), 0)
+  If key = 0 Then Exit Sub
+  Set qd = CurrentDb.QueryDefs("qsCheckRequest")
+  qd.sql = "SELECT * FROM CHECK_REQUEST WHERE CHECK_REQ_KEY = " & key
+  qd.Close
+  
+  Set qd = CurrentDb.QueryDefs("qsCheckReqDetail")
+  qd.sql = "SELECT CHECK_REQ_DETAIL.* FROM CHECK_REQ_DETAIL WHERE CHECK_REQ_DETAIL.CHECK_REQ_KEY = " & key & " ORDER BY CHECK_REQ_DETAIL.CHECK_KEY;"
+  qd.Close
+  
+  If Not FormInstanceExists(key) Then
+    
+    Set f = New Form_frmCheckRequest
+    f.Caption = f.Caption & " - " & key
+    f.SetFocus
+    
+    Dim fb As Generic.clsForms
+    Set fb = Generic.getClsForms
+    Set fb.ifrm = f
+    fb.key = WkshtKey
+    fb.Hwnd = f.Hwnd
+    
+    formsOpen.Add fb
+    Set f = Nothing
+        
+  End If
+  fetchCheckRequests
+End Sub
+
+Private Sub ComboAccount_AfterUpdate()
+  fetchCheckRequests
+End Sub
+
+
+
+Private Sub Form_Load()
+  Dim sql As String
+  LoadComboSort
+  LoadComboAccount
+  txtSelStartDate = ""
+  txtSelEndDate = ""
+  fetchCheckRequests
+End Sub
+
+Private Sub Form_Open(Cancel As Integer)
+    Cancel = Not CheckFormSecurity(ProjectName, Me)
+    lstCheckRequests.RowSource = SQL_SELECT & " WHERE 0=1;"
+End Sub
+
+Private Sub Form_Resize()
+    On Error Resume Next
+    lstCheckRequests.Height = Me.WindowHeight - 2500
+    lstCheckRequests.Width = Me.WindowWidth - 400
+End Sub
+
+Private Sub lstCheckRequests_Click()
+  cmdViewRequest.enabled = True
+  cmdPrintChecks.enabled = Not lstCheckRequests.Column(8) 'deleted
+  cmdPrintRequest.enabled = True
+  cmdDeleteRequest.enabled = (lstCheckRequests.Column(7) = "") And Not lstCheckRequests.Column(8)
+  'Only mark deleted if checks have not been printed and not already deleted
+End Sub
+
+Private Sub lstCheckRequests_DblClick(Cancel As Integer)
+  cmdViewRequest_Click
+End Sub
+
+Public Function fetchCheckRequests()
+  Dim sql As String
+  Dim dateCrit As String
+  Dim ctl As Control
+  Dim FldType As Integer
+ 
+  Select Case grpStatus
+    Case 1    'Unprinted
+      sql = "WHERE DATE_PRINTED is Null AND NOT DELETED "
+    Case 2    'Printed
+      sql = "WHERE DATE_PRINTED is Not Null and NOT DELETED "
+    Case 3    'all
+      sql = "WHERE 1=1 "
+    Case 4    'deleted
+      sql = "WHERE DELETED "
+  End Select
+  
+  'Start and End Date Requested
+  If Len(txtSelStartDate) = 0 And Len(txtSelEndDate) = 0 Then
+    dateCrit = ""
+  ElseIf Len(txtSelEndDate) = 0 Then
+    dateCrit = "AND DATE_REQ >= #" & txtSelStartDate & "# "
+  ElseIf Len(txtSelStartDate) = 0 Then
+    dateCrit = "AND DATE_REQ <= #" & txtSelEndDate & " 23:59# "
+  Else    'must be as start and end date
+    dateCrit = "AND DATE_REQ between #" & txtSelStartDate & _
+                "# and #" & txtSelEndDate & " 23:59# "
+  End If
+  
+  
+  For Each ctl In FormHeader.Controls
+    If ctl.Tag > "" And Not IsNull(ctl) Then
+        Debug.Print ctl.Tag
+        FldType = CurrentDb.TableDefs("Check_Request").Fields(ctl.Tag).TYPE
+        Select Case FldType
+            Case dbint, dbLong, dbCurrency
+                sql = sql & "AND " & ctl.Tag & "=" & ctl & " "
+            Case dbDate, dbTime
+                sql = sql & "AND " & ctl.Tag & " between #" & ctl & "# and #" & ctl & " 23:59# "
+            Case Else
+                sql = sql & "AND " & ctl.Tag & " Like '*" & ctl & "*' "
+        End Select
+    End If
+  Next ctl
+
+Const SQL_SELECT As String = "SELECT CR.CHECK_REQ_KEY as [CR Key], CR.ACCOUNT_KEY AS Acct, " & _
+      "CR.SYSTEM AS [System], CR.MEMO AS Descr, CR.DATE_REQ AS [Req Date-Time], " & _
+      "CR.CHECKS_REQUESTED AS [# Req], CR.AMOUNT_REQUESTED AS [Amount], " & _
+      "CR.DATE_PRINTED AS [Date Printed], [DELETED] " & _
+      " FROM CHECK_REQUEST AS CR "
+  
+  lstCheckRequests.RowSource = SQL_SELECT & sql & dateCrit & "Order By " & ComboSort
+  lstCheckRequests.Requery
+    
+  cmdViewRequest.enabled = False
+  
+End Function
+
+Private Sub LoadComboSort()
+    ComboSort.RowSource = "CHECK_REQ_KEY;Check Req Asc;CHECK_REQ_KEY DESC;Check Req Desc;" & _
+                          "DATE_REQ;Date Req Asc;DATE_REQ DESC;Date Req Desc;" & _
+                          "DATE_PRINTED;Date Printed Asc;DATE_PRINTED DESC;Date Printed Desc; " & _
+                          "AMOUNT_REQUESTED; Amount Asc; AMOUNT_REQUESTED DESC; Amount Desc;"
+                          
+    ComboSort.Value = "AMOUNT_REQUESTED"
+End Sub
+
+Private Sub LoadComboAccount()
+    Dim rs As Recordset
+    Dim qd As QueryDef
+    Set qd = CurrentDb.QueryDefs("qPTGeneralSelect")
+    qd.sql = "(SELECT ACCOUNT_KEY, ACCOUNT_NUMBER, [NAME] FROM ACCOUNT) Union (SELECT null, 'ALL' ,' All Accounts') ORDER BY [NAME]"
+    Set rs = qd.OpenRecordset()
+    
+    Set ComboAccount.Recordset = rs
+    ComboAccount.Value = 0
+End Sub
+
+Private Sub TextDescFilter_AfterUpdate()
+  fetchCheckRequests
+End Sub
+
+Private Sub txtSelEndDate_AfterUpdate()
+  fetchCheckRequests
+End Sub
+
+Private Sub txtSelStartDate_AfterUpdate()
+  fetchCheckRequests
+End Sub
+
